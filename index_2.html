@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creation2Hive — Built from nothing. Everything we make means something.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --bg: #0b0b0d;
+    --bg-raised: #131316;
+    --gold: #d4a94e;
+    --gold-bright: #f0c667;
+    --purple: #6b4f8f;
+    --blue: #3f6f8f;
+    --red: #a8433a;
+    --ink: #e8e4da;
+    --ink-dim: #8a8578;
+    --line: #232326;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Crimson Pro', serif;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--gold); color: #0b0b0d; }
+
+  /* Honeycomb texture backdrop */
+  .honeycomb-field{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.05;
+    pointer-events: none;
+    background-image:
+      linear-gradient(30deg, var(--gold) 12%, transparent 12.5%, transparent 87%, var(--gold) 87.5%, var(--gold)),
+      linear-gradient(150deg, var(--gold) 12%, transparent 12.5%, transparent 87%, var(--gold) 87.5%, var(--gold)),
+      linear-gradient(30deg, var(--gold) 12%, transparent 12.5%, transparent 87%, var(--gold) 87.5%, var(--gold)),
+      linear-gradient(150deg, var(--gold) 12%, transparent 12.5%, transparent 87%, var(--gold) 87.5%, var(--gold));
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+  }
+
+  header{
+    position: fixed;
+    top:0; left:0; right:0;
+    z-index: 100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 24px 6vw;
+    background: linear-gradient(to bottom, rgba(11,11,13,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .logo-mark{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .hex{
+    width: 34px; height: 30px;
+    background: var(--gold);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+
+  .logo-text{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+
+  nav a{
+    color: var(--ink-dim);
+    text-decoration:none;
+    font-family:'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: 36px;
+    transition: color 0.25s ease;
+  }
+  nav a:hover{ color: var(--gold-bright); }
+
+  section{
+    position: relative;
+    z-index: 1;
+    padding: 140px 6vw;
+  }
+
+  /* HERO */
+  .hero{
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-top: 100px;
+    position: relative;
+  }
+
+  .hero-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+
+  .hero h1{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: clamp(3.2rem, 9vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    max-width: 16ch;
+  }
+
+  .hero h1 .accent{ color: var(--gold-bright); }
+
+  .hero-sub{
+    margin-top: 34px;
+    max-width: 46ch;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--ink-dim);
+    line-height: 1.6;
+  }
+
+  .hero-scroll{
+    position: absolute;
+    bottom: 48px;
+    left: 6vw;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    font-family:'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .scroll-line{
+    width: 40px; height: 1px;
+    background: var(--ink-dim);
+    animation: pulse-line 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-line{
+    0%,100%{ width: 40px; opacity: 0.5; }
+    50%{ width: 64px; opacity: 1; }
+  }
+
+  /* SECTION HEADERS */
+  .section-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display:flex;
+    align-items:center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-eyebrow::before{
+    content:'';
+    width: 24px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    letter-spacing: 0.01em;
+    margin-bottom: 60px;
+    max-width: 20ch;
+  }
+
+  /* BRANDS SECTION */
+  .brands{
+    background: var(--bg-raised);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+  }
+
+  .brand-card{
+    background: var(--bg-raised);
+    padding: 0 0 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s ease;
+  }
+
+  .brand-photo{
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(15%) contrast(1.05);
+  }
+
+  .brand-card-body{
+    padding: 32px 36px 0;
+  }
+
+  .product-strip{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .product-strip img{
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: grayscale(10%);
+    border: 1px solid var(--line);
+  }
+
+  .brand-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; height:3px;
+    background: var(--brand-color);
+  }
+
+  .brand-card:hover{ background: #17171a; }
+
+  .brand-hex{
+    width: 46px; height: 40px;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background: var(--brand-color);
+    margin-bottom: 28px;
+  }
+
+  .brand-card h3{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .brand-tag{
+    font-family:'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brand-color);
+    margin-bottom: 20px;
+  }
+
+  .brand-card p{
+    color: var(--ink-dim);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .pump   { --brand-color: var(--red); }
+  .infinite{ --brand-color: var(--blue); }
+  .rogue  { --brand-color: var(--purple); }
+
+  /* MANIFESTO */
+  .manifesto{
+    text-align:center;
+    padding: 180px 6vw;
+  }
+
+  .manifesto blockquote{
+    font-family:'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+    line-height: 1.5;
+    max-width: 20ch;
+    margin: 0 auto;
+    color: var(--ink);
+  }
+
+  .manifesto blockquote::before,
+  .manifesto blockquote::after{
+    content:'';
+  }
+
+  .manifesto-mark{
+    width: 110px; height: 110px;
+    margin: 0 auto 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+  }
+
+  .manifesto-cite{
+    margin-top: 32px;
+    font-family:'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* CATALOG / SHOP */
+  .catalog{
+    background: var(--bg-raised);
+    border-top: 1px solid var(--line);
+  }
+
+  .catalog-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+  }
+
+  .catalog-item{
+    border: 1px solid var(--line);
+    padding: 32px 26px;
+    background: var(--bg);
+  }
+
+  .catalog-item .piece-id{
+    font-family:'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .catalog-item h4{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+
+  .catalog-item p{
+    color: var(--ink-dim);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .coming-soon-badge{
+    display:inline-block;
+    font-family:'Space Mono', monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+    padding: 6px 14px;
+  }
+
+  /* FOOTER */
+  footer{
+    padding: 70px 6vw 40px;
+    border-top: 1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .footer-logo{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .footer-tag{
+    font-family:'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    margin-top: 8px;
+  }
+
+  .footer-links{
+    display:flex;
+    gap: 28px;
+  }
+
+  .footer-links a{
+    color: var(--ink-dim);
+    text-decoration:none;
+    font-family:'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.25s ease;
+  }
+  .footer-links a:hover{ color: var(--gold-bright); }
+
+  /* SCROLL REVEAL */
+  .reveal{
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.is-visible{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 800px){
+    .brand-grid{ grid-template-columns: 1fr; }
+    nav{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+    html{ scroll-behavior: auto; }
+  }
+
+  :focus-visible{
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="honeycomb-field"></div>
+
+<header>
+  <div class="logo-mark">
+    <div class="hex"></div>
+    <div class="logo-text">CREATION2HIVE</div>
+  </div>
+  <nav>
+    <a href="#brands">Brands</a>
+    <a href="#manifesto">Manifesto</a>
+    <a href="#shop">Shop</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">Est. 2026 — Multi-Brand Collective</div>
+  <h1>Built from <span class="accent">nothing.</span><br>Everything we make<br>means something.</h1>
+  <p class="hero-sub">A grassroots hive of streetwear brands, each carrying its own voice, its own world, its own reason for existing.</p>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<section class="brands" id="brands">
+  <div class="section-eyebrow">The Hive</div>
+  <h2 class="section-title reveal">Three brands. One hand-built foundation.</h2>
+  <div class="brand-grid">
+    <div class="brand-card pump reveal">
+      <img class="brand-photo" src="images/pump-city-01.jpg" alt="Pump City — Lift University hoodie">
+      <div class="brand-card-body">
+        <div class="brand-hex"></div>
+        <h3>Pump City</h3>
+        <div class="brand-tag">Fitness — Direct &amp; Motivating</div>
+        <p>Built for the ones who show up before the sun does. No shortcuts, no filters — just the work and what it makes of you.</p>
+        <div class="product-strip">
+          <img src="images/pump-city-02.jpg" alt="Lift University hoodie group">
+          <img src="images/pump-city-03.jpg" alt="Lift University hoodie chalk">
+        </div>
+      </div>
+    </div>
+    <div class="brand-card infinite reveal">
+      <img class="brand-photo" src="images/infinite-01.jpg" alt="Infinite streetwear hoodie">
+      <div class="brand-card-body">
+        <div class="brand-hex"></div>
+        <h3>Infinite</h3>
+        <div class="brand-tag">Streetwear &amp; Sneaker Culture</div>
+        <p>Understated, confident, built to last past the hype cycle. For the ones who don't need to say much to be heard.</p>
+      </div>
+    </div>
+    <div class="brand-card rogue reveal">
+      <img class="brand-photo" src="images/loverboy-01.jpg" alt="Loverboy Rogue hoodie">
+      <div class="brand-card-body">
+        <div class="brand-hex"></div>
+        <h3>Loverboy Rogue</h3>
+        <div class="brand-tag">Skate — Dark Romantic</div>
+        <p>This is for the ones who feel everything. And dress like they don't. Loverboy 24/7.</p>
+        <div class="product-strip">
+          <img src="images/loverboy-02.jpg" alt="Loverboy Rogue hoodie pink">
+          <img src="images/loverboy-03.jpg" alt="Loverboy Rogue hoodie purple">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="manifesto" id="manifesto">
+  <img class="manifesto-mark reveal" src="images/loverboy-crow-mark.jpg" alt="Loverboy Rogue crow mark">
+  <blockquote class="reveal">Every stitch starts with nothing but a reason. We don't chase trends — we build things that mean something to the people who wear them.</blockquote>
+  <div class="manifesto-cite reveal">— The Creation2Hive Manifesto</div>
+</section>
+
+<section class="catalog" id="shop">
+  <div class="section-eyebrow">Loverboy Rogue</div>
+  <h2 class="section-title reveal">Coming to the hive.</h2>
+  <div class="catalog-grid">
+    <div class="catalog-item reveal">
+      <div class="piece-id">LR-001</div>
+      <h4>The Mourner's</h4>
+      <p>Heavyweight hoodie in plum, screen-printed with the crow-on-a-heart mark. Built for the ones who carry things quietly.</p>
+      <span class="coming-soon-badge">Coming Soon</span>
+    </div>
+    <div class="catalog-item reveal">
+      <div class="piece-id">LR-010</div>
+      <h4>Inside-Out Confession</h4>
+      <p>Reverse-print hoodie in purple, seams exposed on purpose. What's usually hidden, worn on the outside.</p>
+      <span class="coming-soon-badge">Coming Soon</span>
+    </div>
+    <div class="catalog-item reveal">
+      <div class="piece-id">LR-024</div>
+      <h4>Half Human, All Rogue</h4>
+      <p>Cyberpunk-accented tee, limited drop. Part of the rotating Loverboy 24/7 drop log.</p>
+      <span class="coming-soon-badge">Coming Soon</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">CREATION2HIVE</div>
+    <div class="footer-tag">Built from nothing. Everything we make means something.</div>
+  </div>
+  <div class="footer-links">
+    <a href="#brands">Brands</a>
+    <a href="#manifesto">Manifesto</a>
+    <a href="#shop">Shop</a>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
